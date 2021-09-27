@@ -1,0 +1,36 @@
+<% if current_user.admin %>
+  <h1><%= t(:add_course) %></h1>
+  <html>
+    <head>
+      <h2><%= t(:course_registration_system) %></h2>
+    </head>
+    <body>
+      <h3><%= t(:adding_course) %></h3>
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <%= form_with model: @course do |f| %>
+
+            <%= f.label :name, t(:course_name) %>
+            <%= f.text_field :name, class: "form-control" %>
+
+            <%= f.label :description, t(:course_description) %>
+            <%= f.text_field :description, class: "form-control" %>
+
+            <%= f.label :total_month, t(:course_totalmonth) %>
+            <%= f.number_field :total_month, class: "form-control" %>
+
+            <%= f.label :total_member, t(:course_totalmember) %>
+            <%= f.number_field :total_member, class: "form-control" %>
+
+            <%= f.label :status, t(:course_status) %>
+            <%= f.select :status, ['Opening', 'Started', 'Finished'] %>
+
+            <%= f.submit "Create course", class: "btn btn-primary" %>
+          <% end %>
+        </div>
+      </div>
+    </body>
+  </html>
+<% else %>
+  <h3>You are not the admin user!</h3>
+<% end %>

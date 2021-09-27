@@ -1,11 +1,75 @@
 <% provide :title, @user.name %>
-<div class="row">
-  <aside class="col-md-4">
-    <section class="user_info">
-      <h1>
-        <%= gravatar_for @user %>
-        <%= @user.name %>
-      </h1>
-    </section>
-  </aside>
-</div>
+<% if current_user.admin %>
+  You're logging in as an admin user! <br>
+  <div class="row">
+    <aside class="col-md-4">
+      <section class="user_info">
+        <h1>
+          <%= gravatar_for @user %>
+          <%= @user.name %>
+        </h1>
+      </section>
+    </aside>
+  </div>
+
+  <h1>Pending registration</h1>
+
+  <% @user_pending.each do |pending| %>
+    <li>Student's name: <%= pending.user.name %><br>
+    Course: <%= pending.course.name %><br>
+    </li>
+    <%= form_for pending do |f| %>
+      <%= f.hidden_field :status, :value => 'Approved' %>
+      <%= f.submit "Approve", data: {confirm: "Are you sure?"} %><br>
+    <% end %>
+    <%= form_for pending do |f| %>
+      <%= f.hidden_field :status, :value => 'Denied' %>
+      <%= f.submit "Deny", data: {confirm: "Are you sure?"} %><br>
+    <% end %>
+  <% end %>
+
+  <h1>Accepted registration</h1>
+
+  <% @user_approved.each do |approved| %>
+    <li>Student's name: <%= approved.user.name %><br>
+    Course: <%= approved.course.name %><br>
+    </li>
+  <% end %>
+
+  <h1>Denied registration</h1>
+
+  <% @user_denied.each do |denied| %>
+    <li>Student's name: <%= denied.user.name %><br>
+    Course: <%= denied.course.name %><br>
+    </li>
+  <% end %>
+<% else %>
+  <div class="row">
+    <aside class="col-md-4">
+      <section class="user_info">
+        <h1>
+          <%= gravatar_for @user %>
+          <%= @user.name %><br>
+        </h1>
+      </section>
+    </aside>
+  </div>
+
+  <% @user.user_courses.each do |s| %>
+    <%= s.course.name %> |
+    <% if s.status != "Approved"%>
+      <%= link_to "Cancel Registration", s, method: :delete, data: {confirm: "Sure?"} %><br>
+    <% else %>
+      <%= link_to "delete just for prototype", s, method: :delete, data: {confirm: "Sure?"} %><br>
+    <% end %>
+    <%= s.status %><br>
+  <% end %>
+<% end %>
+
+
+
+
+
+
+
+

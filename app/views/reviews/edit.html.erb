@@ -1,0 +1,8 @@
+<strong><h2>Review course</h2><br></strong>
+<%= form_with model: @review do |f| %>
+  <%= f.hidden_field :user_id, :value => @review.user.id %>
+  <%= f.hidden_field :review_id, :value => @review.course.id %>
+  <%= f.label :content, "Content" %><br>
+  <%= f.text_area :content, class: "form-control" %><br>
+  <%= f.submit "Update review", class: "btn btn-primary" %>
+<% end %>

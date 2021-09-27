@@ -10,7 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_24_081616) do
+ActiveRecord::Schema.define(version: 2021_10_11_040418) do
+
+  create_table "courses", charset: "utf8mb3", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "started_at"
+    t.integer "total_month"
+    t.integer "total_member"
+    t.integer "status", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "reviews", charset: "utf8mb3", force: :cascade do |t|
+    t.integer "course_id"
+    t.integer "user_id"
+    t.text "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "user_courses", charset: "utf8mb3", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "course_id"
+    t.integer "status", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "users", charset: "utf8mb3", force: :cascade do |t|
     t.string "name"
@@ -20,6 +47,13 @@ ActiveRecord::Schema.define(version: 2021_09_24_081616) do
     t.string "password_digest"
     t.string "remember_digest"
     t.boolean "admin", default: false
+    t.string "activation_digest"
+    t.boolean "activated", default: false
+    t.datetime "activated_at"
+    t.string "reset_digest"
+    t.datetime "reset_sent_at"
+    t.integer "status", default: 0
+    t.integer "role", default: 0
   end
 
 end

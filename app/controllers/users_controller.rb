@@ -10,6 +10,10 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find_by id: params[:id]
+    @user_pending = UserCourse.Pending.all
+    @user_approved = UserCourse.Approved.all
+    @user_denied = UserCourse.Denied.all
+
     return if @user
 
     flash[:danger] = "User not found"
@@ -23,9 +27,9 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)  # Not the final implementation!
     if @user.save
-      log_in @user
-      flash[:success] = t(:welcome)
-      redirect_to @user
+      @user.send_activation_email
+      flash[:info] = t(:check)
+      redirect_to home_url
     else
       render :new
     end
@@ -73,10 +77,10 @@ class UsersController < ApplicationController
     @user = User.find_by(id: params[:id])
     return if current_user?(@user)
     flash[:danger] = t(:n_authorized)
-    redirect_to(root_url) unless current_user?(@user)
+    redirect_to(home_url) unless current_user?(@user)
   end
 
   def admin_user
-    redirect_to(root_url) unless current_user.admin?
+    redirect_to(home_url) unless current_user.admin?
   end
 end

@@ -1,5 +1,10 @@
-<%= provide :title, t(:home) %>
-<h1><%= t(:heading) %></h1>
+<%= provide(:title, t(:home)) %>
+
+<h1><%= t(:greetings) %></h1>
 <p>
-  <%= t(:t_p1) %>
+  <%= t(:t_p1) %><br>
+  <% if current_user&.admin? %>
+    <li><%= link_to t(:add_course), new_course_path %></li>
+  <% else %>
+  <% end %>
 </p>

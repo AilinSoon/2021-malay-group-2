@@ -1,0 +1,63 @@
+<h1>
+  <strong><%= @course.name %></strong>
+  <% if current_user&.admin? %>
+    <% if @course.status == "Opening" || @course.status == "Finished"%>
+      | <small><%= link_to "Delete", @course, method: :delete, data: {confirm: "Sure?"} %></small>
+    <% end %>
+    | <small><%= link_to "Update", edit_course_path(@course) %></small>
+  <% end %>
+</h1>
+
+<p>
+  <b><%= t(:description) %></b> <%= @course.description %><br>
+  <% if @course.status == "Started" %>
+    <b><%= t(:started_at) %></b>
+    <%= @course.started_at %></br>
+  <% end %>
+  <b><%= t(:total_month) %></b><%= @course.total_month %><br>
+  <b><%= t(:total_member) %></b><%= @course.total_member %><br>
+  <b><%= t(:status) %></b><%= @course.status %><br>
+</p>
+
+<% if !current_user.admin %>
+  <%= form_for @user_course do |f| %>
+    <% if @course.status == "Opening" %>
+      <%= f.hidden_field :user_id, :value => current_user.id %><br>
+      <%= f.hidden_field :course_id, :value => @course.id %><br>
+      <%= f.submit "Register", data: {confirm: "Are you sure?"} %><br>
+    <% else %>
+      <%= f.hidden_field :user_id, :value => current_user.id %><br>
+      <%= f.hidden_field :course_id, :value => @course.id %><br>
+      <%= f.submit "Appeal", data: {confirm: "Are you sure?"} %><br>
+    <% end %>
+  <% end %>
+
+  <strong><h2>Review course</h2><br></strong>
+  <%= form_for @review do |f| %>
+    <%= f.hidden_field :user_id, :value => current_user.id %>
+    <%= f.hidden_field :course_id, :value => @course.id %>
+    <%= f.label :content, "Content" %><br>
+    <%= f.text_area :content, class: "form-control" %><br>
+    <%= f.submit "Create review", class: "btn btn-primary" %>
+  <% end %>
+<% end %>
+
+<h2>Student's review</h2><br>
+<%= @course.reviews.each do |r| %>
+  Name : <%= r.user.name %><br>
+  Content : <%= r.content %>
+  <% if current_user.admin %>
+    | <%= link_to "Delete", r, method: :delete, data: {confirm: "Sure?"} %>
+  <% else %>
+    <p><% if current_user.id == r.user_id %>
+      | <%= link_to "Delete", r, method: :delete, data: {confirm: "Sure?"} %>
+      | <%= link_to "Edit", edit_review_path(r) %></p><br>
+    <% else %>
+      <br>
+    <% end %>
+  <% end %>
+<% end %>
+
+
+
+

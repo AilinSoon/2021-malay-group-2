@@ -1,0 +1,33 @@
+<h1><%= t(:courses_available) %></h1>
+
+<ul>
+  <% @courses.each do |course| %>
+      <% if current_user&.admin? %>
+        <b><mark><em><%= link_to course.name, course %></b></em></mark>
+        <% if course.status == "Opening" || course.status == "Finished" %>
+          | <%= link_to "Delete", course, method: :delete, data: {confirm: "Sure?"} %>
+        <% end %>
+        | <%= link_to "Update", edit_course_path(course) %>
+
+      <% else %>
+        <b><mark><em><%= link_to course.name, course %></b></em></mark>
+        <% if course.status == "Opening" && current_user %>
+          <%= link_to "Register", course %>
+        <% elsif course.status == "Started" %>
+          <%= link_to "Appeal", course %>
+        <% end %>
+      <% end %>
+      <br>
+    <p>
+      <b><%= t(:description) %></b> <%= course.description %><br>
+      <% if course.status == "Started" %>
+        <b><%= t(:started_at) %></b>
+        <%= course.started_at %><br>
+      <% end %>
+      <b><%= t(:total_month) %></b> <%= course.total_month %><br>
+      <b><%= t(:total_member) %></b> <%= course.user_courses.Approved.count %><br>
+      <b><%= t(:status) %></b> <%= course.status %>
+    </p>
+  <% end %>
+
+</ul>
